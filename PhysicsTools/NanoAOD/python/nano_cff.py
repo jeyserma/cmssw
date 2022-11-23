@@ -35,6 +35,7 @@ linkedObjects = cms.EDProducer("PATObjectCrossLinker",
    electrons=cms.InputTag("finalElectrons"),
    taus=cms.InputTag("finalTaus"),
    photons=cms.InputTag("finalPhotons"),
+   vertices=cms.InputTag("slimmedSecondaryVertices")
 )
 
 simpleCleanerTable = cms.EDProducer("NanoAODSimpleCrossCleaner",
