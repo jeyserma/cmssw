@@ -443,6 +443,21 @@ def nanoAOD_customizeData(process):
     process = nanoAOD_recalibrateMETs(process,isData=True)
     for modifier in run2_nanoAOD_94XMiniAODv1, run2_nanoAOD_94XMiniAODv2:
         modifier.toModify(process, lambda p: nanoAOD_runMETfixEE2017(p,isData=True))
+
+    # load geometry needed by g4e propagator
+    process.GlobalTag.toGet = cms.VPSet(
+                                cms.PSet(
+                                    record = cms.string("GeometryFileRcd"),tag = cms.string("XMLFILE_Geometry_2016_81YV1_Extended2016_mc"),label = cms.untracked.string("Extended"),
+                                    ),
+                                )
+
+    # load 3d field map and use it for g4e propagator
+    from MagneticField.ParametrizedEngine.parametrizedMagneticField_PolyFit3D_cfi import ParametrizedMagneticFieldProducer as PolyFit3DMagneticFieldProducer
+    process.PolyFit3DMagneticFieldProducer = PolyFit3DMagneticFieldProducer
+    fieldlabel = "PolyFit3DMf"
+    process.PolyFit3DMagneticFieldProducer.label = fieldlabel
+    process.Geant4ePropagator.MagneticFieldLabel = fieldlabel
+
     return process
 
 def nanoAOD_customizeMC(process):
@@ -450,19 +465,27 @@ def nanoAOD_customizeMC(process):
     process = nanoAOD_recalibrateMETs(process,isData=False)
     for modifier in run2_nanoAOD_94XMiniAODv1, run2_nanoAOD_94XMiniAODv2:
         modifier.toModify(process, lambda p: nanoAOD_runMETfixEE2017(p,isData=False))
+    # remove duplicate branch with incomplete content *TODO* make this more elegant
+    del process.muonExternalVecVarsTable.variables.cvhmergedGlobalIdxs
     return process
 
 ###Customizations needed for Wmass analysis                                                                                                              
 ###increasing the precision of selected GenParticles.                                                                                                             
-def nanoGenWmassCustomize(process):
+def customizeGenLeptonPrecision(process):
     pdgSelection="?(abs(pdgId) == 11|| abs(pdgId)==13 || abs(pdgId)==15 ||abs(pdgId)== 12 || abs(pdgId)== 14 || abs(pdgId)== 16|| abs(pdgId)== 6|| abs(pdgId)== 24|| pdgId== 23|| pdgId== 25)"
-    # Keep precision same as default RECO for selected particles                                                                                       
-    ptPrecision="{}?{}:{}".format(pdgSelection, 23,genParticleTable.variables.pt.precision.value())
+
+    # Keep full precision for selected particles                                                                                       
+    ptPrecision="{}?{}:{}".format(pdgSelection, -1, genParticleTable.variables.pt.precision.value())
     process.genParticleTable.variables.pt.precision=cms.string(ptPrecision)
-    phiPrecision="{} ? {} : {}".format(pdgSelection, CandVars.phi.precision.value(), genParticleTable.variables.phi.precision.value())
+    phiPrecision="{} ? {} : {}".format(pdgSelection, -1, genParticleTable.variables.phi.precision.value())
     process.genParticleTable.variables.phi.precision=cms.string(phiPrecision)
-    etaPrecision="{} ? {} : {}".format(pdgSelection, CandVars.eta.precision.value(), genParticleTable.variables.eta.precision.value())
+    etaPrecision="{} ? {} : {}".format(pdgSelection, -1, genParticleTable.variables.eta.precision.value())
     process.genParticleTable.variables.eta.precision=cms.string(etaPrecision)
+
+    return process
+
+def nanoGenWmassCustomize(process):
+    process = customizeGenLeptonPrecision(process)
     
     process.lheInfoTable.storeAllLHEInfo = True
 

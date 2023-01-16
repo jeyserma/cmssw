@@ -49,7 +49,7 @@ nanotpSequenceMC = cms.Sequence(
         muonTable + vertexTables+ isoTrackTables + generalTrackTable + standaloneMuonTable + standaloneMuonUpdatedAtVtxTable + mergedStandaloneMuonTable +
         genParticleSequence + genParticleTable +
         genWeightsTables + genVertexTables + puTable + genTable + 
-        muonMC + 
+        muonMCTP + 
         triggerObjectTables + l1bits
         )
 
@@ -66,6 +66,9 @@ def customizeNANOTP(process):
     muonTable.variables = cms.PSet(muonTable.variables,
             standaloneExtraIdx = Var('? standAloneMuon().isNonnull() ? standAloneMuon().extra().key() : -99', 'int', precision=-1, doc='Index of the innerTrack TrackExtra in the original collection'),
             innerTrackExtraIdx = Var('? innerTrack().isNonnull() ? innerTrack().extra().key() : -99', 'int', precision=-1, doc='Index of the innerTrack TrackExtra in the original collection'),
+            vx = Var('vx', 'float', precision=-1, doc='Muon X position'),
+            vy = Var('vy', 'float', precision=-1, doc='Muon Y position'),
+            vz = Var('vz', 'float', precision=-1, doc='Muon Z position'),
     )
     muonTable.externalVariables = cms.PSet(
             isStandAloneUpdatedAtVtx = ExtVar(cms.InputTag("mergedStandAloneMuons:muonUpdatedAtVtx"),bool, doc="is standalone muon track updated at vertex"),
@@ -75,15 +78,4 @@ def customizeNANOTP(process):
     process.selectedPatMuons.cut = cms.string("||".join([passStandalone, process.selectedPatMuons.cut.value()]))
     process.finalMuons.cut = cms.string("||".join([passStandalone, process.finalMuons.cut.value()]))
     process.linkedMuons.cut = process.finalMuons.cut
-    return process
-
-def nanoGenWmassCustomize(process):
-    pdgSelection="?(abs(pdgId) == 11|| abs(pdgId)==13 || abs(pdgId)==15 ||abs(pdgId)== 12 || abs(pdgId)== 14 || abs(pdgId)== 16|| abs(pdgId)== 6|| abs(pdgId)== 24|| pdgId== 23|| pdgId== 25)"
-    # Keep precision same as default RECO for selected particles                                                                                       
-    ptPrecision="{}?{}:{}".format(pdgSelection, 23,genParticleTable.variables.pt.precision.value())
-    process.genParticleTable.variables.pt.precision=cms.string(ptPrecision)
-    phiPrecision="{} ? {} : {}".format(pdgSelection, CandVars.phi.precision.value(), genParticleTable.variables.phi.precision.value())
-    process.genParticleTable.variables.phi.precision=cms.string(phiPrecision)
-    etaPrecision="{} ? {} : {}".format(pdgSelection, CandVars.eta.precision.value(), genParticleTable.variables.eta.precision.value())
-    process.genParticleTable.variables.eta.precision=cms.string(etaPrecision)
     return process
