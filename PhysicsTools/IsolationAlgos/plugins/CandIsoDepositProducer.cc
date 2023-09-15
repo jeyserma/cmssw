@@ -115,6 +115,7 @@ void CandIsoDepositProducer::produce(Event& event, const EventSetup& eventSetup)
     Track dummy;
     for (size_t i=0; i<  nMuons; ++i) {
       const Candidate &c = (*hCands)[i];
+      if (c.pt()>10.) std::cout<<"CandIsoDepositProducer: pt: "<<c.pt()<<"\teta: "<<c.eta()<<"\tphi: "<<c.phi()<<"\n";
       const Track *track = extractTrack(c, &dummy);
       if ((theTrackType != CandidateT) && (!track)) {
         edm::LogWarning("CandIsoDepositProducer") << "Candidate #"<<i<<" has no bestTrack(), it will produce no deposit";
@@ -128,11 +129,12 @@ void CandIsoDepositProducer::produce(Event& event, const EventSetup& eventSetup)
 	deps2D[0][i] = ( ( theTrackType == CandidateT )
 			     ? theExtractor->deposit(event, eventSetup, c)
 			     : theExtractor->deposit(event, eventSetup, *track) );
+    if (c.pt()>10.) std::cout<<deps2D[0][i].print();
       } else {
 	std::vector<IsoDeposit> deps = ( ( theTrackType == CandidateT )
 					   ? theExtractor->deposits(event, eventSetup, c)
 					   : theExtractor->deposits(event, eventSetup, *track) );
-	for (unsigned int iDep=0; iDep < nDeps; ++iDep){ 	deps2D[iDep][i] =  deps[iDep];  }
+	for (unsigned int iDep=0; iDep < nDeps; ++iDep){ 	deps2D[iDep][i] =  deps[iDep];}
       }
     }//! for(i<nMuons)
   }//if (nMuons>0)
