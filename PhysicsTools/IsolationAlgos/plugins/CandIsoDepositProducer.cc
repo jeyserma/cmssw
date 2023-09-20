@@ -132,7 +132,7 @@ void CandIsoDepositProducer::produce(Event& event, const EventSetup& eventSetup)
 	std::vector<IsoDeposit> deps = ( ( theTrackType == CandidateT )
 					   ? theExtractor->deposits(event, eventSetup, c)
 					   : theExtractor->deposits(event, eventSetup, *track) );
-	for (unsigned int iDep=0; iDep < nDeps; ++iDep){ 	deps2D[iDep][i] =  deps[iDep];}
+	for (unsigned int iDep=0; iDep < nDeps; ++iDep){ 	deps2D[iDep][i] =  deps[iDep];  }
       }
     }//! for(i<nMuons)
   }//if (nMuons>0)
