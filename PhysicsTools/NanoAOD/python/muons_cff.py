@@ -189,19 +189,6 @@ vtxAgnIsoVariables = cms.PSet(
     vtxAgnPfRelIso03_all = ExtVar(cms.InputTag("muonvtxagniso03:vtxAgnosticTotalIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.3, combination with delta beta corrections)"),
 )
 
-crossCheckIsoVariables = cms.PSet(
-    crossCheckPfRelIso04_chg = ExtVar(cms.InputTag("muoncrosscheckiso04:vtxAgnosticChargedHadronIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.4, charged component)"),
-    crossCheckPfRelIso04_neu = ExtVar(cms.InputTag("muoncrosscheckiso04:vtxAgnosticNeutralHadronIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.4, neutral component)"),
-    crossCheckPfRelIso04_pho = ExtVar(cms.InputTag("muoncrosscheckiso04:vtxAgnosticPhotonIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.4, photon component)"),
-    crossCheckPfRelIso04_pu = ExtVar(cms.InputTag("muoncrosscheckiso04:vtxAgnosticPUIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.4, PU component)"),
-    crossCheckPfRelIso04_all = ExtVar(cms.InputTag("muoncrosscheckiso04:vtxAgnosticTotalIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.4, combination with delta beta corrections)"),
-    crossCheckPfRelIso03_chg = ExtVar(cms.InputTag("muoncrosscheckiso03:vtxAgnosticChargedHadronIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.3, charged component)"),
-    crossCheckPfRelIso03_neu = ExtVar(cms.InputTag("muoncrosscheckiso03:vtxAgnosticNeutralHadronIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.3, neutral component)"),
-    crossCheckPfRelIso03_pho = ExtVar(cms.InputTag("muoncrosscheckiso03:vtxAgnosticPhotonIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.3, photon component)"),
-    crossCheckPfRelIso03_pu = ExtVar(cms.InputTag("muoncrosscheckiso03:vtxAgnosticPUIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.3, PU component)"),
-    crossCheckPfRelIso03_all = ExtVar(cms.InputTag("muoncrosscheckiso03:vtxAgnosticTotalIso"), float, doc="Manually computed PF relative isolation to avoid vertex selection (DR=0.3, combination with delta beta corrections)"),
-)
-
 muonTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
     src = cms.InputTag("linkedObjects","muons"),
     cut = cms.string(""), #we should not filter on cross linked collections
@@ -267,7 +254,7 @@ muonTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
         innerTrackAlgo = Var('? innerTrack().isNonnull() ? innerTrack().algo() : -99', 'int', precision=-1, doc='Track algo enum, check DataFormats/TrackReco/interface/TrackBase.h for details.'),
         innerTrackOriginalAlgo = Var('? innerTrack().isNonnull() ? innerTrack().originalAlgo() : -99', 'int', precision=-1, doc='Track original algo enum'),
         ),
-    externalVariables = cms.PSet(vtxAgnIsoVariables, crossCheckIsoVariables,
+    externalVariables = cms.PSet(vtxAgnIsoVariables,
         mvaTTH = ExtVar(cms.InputTag("muonMVATTH"),float, doc="TTH MVA lepton ID score",precision=14),
         mvaLowPt = ExtVar(cms.InputTag("muonMVALowPt"),float, doc="Low pt muon ID score",precision=14),
         fsrPhotonIdx = ExtVar(cms.InputTag("muonFSRassociation:fsrIndex"),int, doc="Index of the associated FSR photon"),
@@ -355,7 +342,7 @@ muonMCTable = cms.EDProducer("CandMCMatchTableProducer",
 muonSequence = cms.Sequence(slimmedMuonsUpdated+isoForMu + ptRatioRelForMu + slimmedMuonsWithUserData + finalMuons + finalLooseMuons)
 muonMCTP = cms.Sequence(muonsMCMatchForTable + muonMCTable)
 muonMC = cms.Sequence(trackrefitideal + mergedGlobalIdxs + muonMCTP + muonIdealTable + muonIdealExternalVecVarsTable)
-muonTables = cms.Sequence(muonFSRphotons + muonFSRassociation + muonMVATTH + muonMVALowPt + geopro + tracksfrommuons + trackrefit + muonvtxagniso04 + muonvtxagniso03 + muoncrosscheckiso04 + muoncrosscheckiso03+ muonTable + muonExternalVecVarsTable + fsrTable)
+muonTables = cms.Sequence(muonFSRphotons + muonFSRassociation + muonMVATTH + muonMVALowPt + geopro + tracksfrommuons + trackrefit + muonvtxagniso04 + muonvtxagniso03 + muonTable + muonExternalVecVarsTable + fsrTable)
 
 # remove track refit stuff for low pu
 run2_nanoAOD_LowPU.toReplaceWith(muonTables, muonTables.copyAndExclude([geopro, tracksfrommuons, trackrefit, muonExternalVecVarsTable]))
