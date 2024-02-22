@@ -481,6 +481,10 @@ class RunMETCorrectionsAndUncertainties(ConfigToolBase):
             fullPatMetSequence +=getattr(process, "deepMETsResolutionTune")
         if hasattr(process, "deepMETsResponseTune"):
             fullPatMetSequence += getattr(process, "deepMETsResponseTune")
+        if hasattr(process, "deepMETsPVRobust"):
+            fullPatMetSequence +=getattr(process, "deepMETsPVRobust")
+        if hasattr(process, "deepMETsPVRobustNoPUPPI"):
+            fullPatMetSequence +=getattr(process, "deepMETsPVRobustNoPUPPI")
         if hasattr(process, "slimmedMETs"+postfix):
             fullPatMetSequence +=getattr(process, "slimmedMETs"+postfix)
 
@@ -1839,6 +1843,11 @@ class RunMETCorrectionsAndUncertainties(ConfigToolBase):
                 # process includes producing/extracting deepMETsResolutionTune and deepMETsResponseTune
                 # add them to the slimmedMETs
                 getattr(process,"slimmedMETs"+postfix).addDeepMETs = True
+                
+            if hasattr(process, "deepMETsPVRobust") and hasattr(process, "deepMETsPVRobustNoPUPPI"):
+                # process includes producing/extracting deepMETsPVRobust and deepMETsPVRobustNoPUPPI
+                # add them to the slimmedMETs
+                getattr(process,"slimmedMETs"+postfix).addDeepMETsPVRobust = True
 
             #smearing and type0 variations not yet supported in reprocessing
             #del getattr(process,"slimmedMETs"+postfix).t1SmearedVarsAndUncs
