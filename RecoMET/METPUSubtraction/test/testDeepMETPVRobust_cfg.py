@@ -44,7 +44,13 @@ process.deepMETProducer = deepMETProducer.clone(
     ignore_leptons = cms.bool(True)
 )
 
-process.sequence = cms.Sequence(process.deepMETPVRobustProducer + process.deepMETPVRobustNoPUPPIProducer + process.deepMETProducer)
+process.load('CommonTools/PileupAlgos/Puppi_cff')
+process.deepMETPVRobustProducer.pf_src = cms.InputTag("puppiPVRobust")
+process.deepMETPVRobustNoPUPPIProducer.pf_src = cms.InputTag("puppiPVRobust")
+process.sequence = cms.Sequence(process.puppiPVRobust + process.deepMETPVRobustProducer + process.deepMETPVRobustNoPUPPIProducer + process.deepMETProducer)
+
+#process.sequence = cms.Sequence(process.deepMETPVRobustProducer + process.deepMETPVRobustNoPUPPIProducer + process.deepMETProducer)
+
 process.p = cms.Path(process.sequence)
 process.output = cms.OutputModule("PoolOutputModule",
                                   outputCommands=cms.untracked.vstring(
