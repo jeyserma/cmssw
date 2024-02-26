@@ -481,6 +481,9 @@ class RunMETCorrectionsAndUncertainties(ConfigToolBase):
             fullPatMetSequence +=getattr(process, "deepMETsResolutionTune")
         if hasattr(process, "deepMETsResponseTune"):
             fullPatMetSequence += getattr(process, "deepMETsResponseTune")
+        # PV robust version of DeepMET
+        if hasattr(process, "deepMETsPVRobust"):
+            fullPatMetSequence +=getattr(process, "puppiPVRobust")
         if hasattr(process, "deepMETsPVRobust"):
             fullPatMetSequence +=getattr(process, "deepMETsPVRobust")
         if hasattr(process, "deepMETsPVRobustNoPUPPI"):

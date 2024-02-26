@@ -186,6 +186,8 @@ phase2_common.toModify(
 
 from Configuration.ProcessModifiers.run2_miniAOD_UL_cff import run2_miniAOD_UL
 from Configuration.Eras.Modifier_run2_nanoAOD_106Xv1_cff import run2_nanoAOD_106Xv1
+from Configuration.Eras.Modifier_run2_nanoAOD_106Xv2_cff import run2_nanoAOD_106Xv2
+
 (run2_miniAOD_UL|run2_nanoAOD_106Xv1).toModify(
     puppi,
     EtaMinUseDeltaZ = 2.4,
@@ -195,7 +197,7 @@ from Configuration.Eras.Modifier_run2_nanoAOD_106Xv1_cff import run2_nanoAOD_106
     algos = { 0 : dict(etaMin = {-0.01}) } # include particles with eta==0 (proper fix is in #31174)
 )
 
-(run2_miniAOD_UL|run2_nanoAOD_106Xv1).toModify(
+(run2_miniAOD_UL|run2_nanoAOD_106Xv1|run2_nanoAOD_106Xv2).toModify(
     puppiPVRobust,
     EtaMinUseDeltaZ = 2.4,
     PtMaxCharged = 20.,

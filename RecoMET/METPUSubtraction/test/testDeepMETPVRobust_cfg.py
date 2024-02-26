@@ -14,7 +14,7 @@ process.load(
     'Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input=cms.untracked.int32(100)
+    input=cms.untracked.int32(200)
 )
 
 # Input source
@@ -45,8 +45,8 @@ process.deepMETProducer = deepMETProducer.clone(
 )
 
 process.load('CommonTools/PileupAlgos/Puppi_cff')
-process.deepMETPVRobustProducer.pf_src = cms.InputTag("puppiPVRobust")
-process.deepMETPVRobustNoPUPPIProducer.pf_src = cms.InputTag("puppiPVRobust")
+#process.deepMETPVRobustProducer.pf_src = cms.InputTag("puppiPVRobust")
+#process.deepMETPVRobustNoPUPPIProducer.pf_src = cms.InputTag("puppiPVRobust")
 process.sequence = cms.Sequence(process.puppiPVRobust + process.deepMETPVRobustProducer + process.deepMETPVRobustNoPUPPIProducer + process.deepMETProducer)
 
 #process.sequence = cms.Sequence(process.deepMETPVRobustProducer + process.deepMETPVRobustNoPUPPIProducer + process.deepMETProducer)

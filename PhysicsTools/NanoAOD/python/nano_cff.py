@@ -214,20 +214,21 @@ def nanoAOD_addDeepMET(process, addDeepMETProducer, ResponseTune_Graph):
         
     # add PV Robust version of DeepMET
     print("add PV Robust version of DeepMET")
+    process.load('CommonTools.PileupAlgos.Puppi_cff')
     process.load('RecoMET.METPUSubtraction.deepMETPVRobustProducer_cfi')
     process.deepMETsPVRobust = process.deepMETPVRobustProducer.clone(
-        do_print=cms.bool(True), 
+        #do_print=cms.bool(True), 
         ignore_leptons = cms.bool(True)
     )
-
     process.deepMETsPVRobustNoPUPPI = process.deepMETPVRobustProducer.clone(
-        do_print=cms.bool(True), 
+        #do_print=cms.bool(True), 
         ignore_leptons = cms.bool(True), 
         usePUPPI = cms.bool(False),
         graph_path = cms.string('RecoMET/METPUSubtraction/data/deepmet_pvrobust/deepmet_pvrobust_nopuppi.pb')
     )
-
     process.metTables += process.deepMetPVRobustTables
+    process.pvRobustTable = pvRobustTable.clone()
+    process.globalTables += process.pvRobustTable
     return process
 
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
