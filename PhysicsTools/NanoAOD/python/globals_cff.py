@@ -44,5 +44,11 @@ pvRobustTable = cms.EDProducer("GlobalVariablesTableProducer",
     )
 )
 
+pvMuonIndexTable = cms.EDProducer("GlobalVariablesTableProducer",
+    variables = cms.PSet(
+        PVMuonIndex = ExtVar( cms.InputTag("puppiPVRobust:PVMuonIndex"), "int", doc = "index of the slimmedMuons collection that is used to determine the robust PV index" )
+    )
+)
+
 globalTables = cms.Sequence(rhoTable)
 globalTablesMC = cms.Sequence(puTable+genTable)

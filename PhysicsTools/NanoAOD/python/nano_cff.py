@@ -229,6 +229,8 @@ def nanoAOD_addDeepMET(process, addDeepMETProducer, ResponseTune_Graph):
     process.metTables += process.deepMetPVRobustTables
     process.pvRobustTable = pvRobustTable.clone()
     process.globalTables += process.pvRobustTable
+    process.pvMuonIndexTable = pvMuonIndexTable.clone()
+    process.globalTables += process.pvMuonIndexTable
     return process
 
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
