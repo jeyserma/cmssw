@@ -224,6 +224,10 @@ from PhysicsTools.PatUtils.L1PrefiringWeightProducer_cff import prefiringweight
 run2_jme_2017.toModify( prefiringweight, DataEraECAL = cms.string("UL2017BtoF"), DataEraMuon = cms.string("20172018"))
 #Next line is for UL2018 maps 
 run2_muon_2018.toModify( prefiringweight, DataEraECAL = cms.string("None"), DataEraMuon = cms.string("20172018"))
+# Special maps for ECAL lowPU runs
+run2_nanoAOD_LowPU.toModify( prefiringweight, L1Maps = cms.string("L1PrefiringMaps2017GH.root"), DataEraECAL = cms.string("2017H"), DataEraMuon = cms.string("20172018"))
+run2_nanoAOD_LowPU5TeV.toModify( prefiringweight, L1Maps = cms.string("L1PrefiringMaps2017GH.root"), DataEraECAL = cms.string("2017G"), DataEraMuon = cms.string("20172018"))
+
 
 #For pre-UL 2017 reprocessing, one should use the original maps and no muon jet protection  
 for modifier in run2_nanoAOD_94XMiniAODv1, run2_nanoAOD_94XMiniAODv2:
